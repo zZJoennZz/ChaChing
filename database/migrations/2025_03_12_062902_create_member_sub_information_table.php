@@ -11,14 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('member_sub_information', function (Blueprint $table) {
             $table->id();
-            $table->string("member_id")->unique(); //FORMAT: MYYYYMMDDCTR SAMPLE: M202410030001
-            $table->string("status");
-            $table->string("email_address");
-            $table->date("member_since_date");
-            $table->string("online_ref_id");
+            $table->unsignedBigInteger("members_id");
+            $table->string("information_type");
+            $table->longText("sub_information");
             $table->timestamps();
+            $table->foreign("members_id")->references("id")->on("members");
         });
     }
 
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('member_sub_information');
     }
 };

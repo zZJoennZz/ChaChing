@@ -4,6 +4,7 @@ use App\Http\Controllers\api\BorrowTransferController;
 use App\Http\Controllers\api\BranchController;
 use App\Http\Controllers\api\ClusterController;
 use App\Http\Controllers\api\DisposalController;
+use App\Http\Controllers\api\MemberController;
 use App\Http\Controllers\api\MiscController;
 use App\Http\Controllers\api\PassportAuthController;
 use App\Http\Controllers\api\PositionController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\api\RDSRecordController;
 use App\Http\Controllers\api\TransactionController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +32,8 @@ Route::prefix('v1')->group(function () {
         Route::post('register', [PassportAuthController::class, 'register']);
         Route::post('logout', [PassportAuthController::class, 'logout']);
         Route::post('check_token', [PassportAuthController::class, 'is_valid']);
+
+        Route::post('get-unsync', [MemberController::class, 'get_unsync']);
     });
 
     Route::middleware('guest')->group(function () {

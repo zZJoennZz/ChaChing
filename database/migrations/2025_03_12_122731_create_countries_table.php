@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('countries', function (Blueprint $table) {
             $table->id();
-            $table->string("member_id")->unique(); //FORMAT: MYYYYMMDDCTR SAMPLE: M202410030001
-            $table->string("status");
-            $table->string("email_address");
-            $table->date("member_since_date");
-            $table->string("online_ref_id");
+            $table->string("num_code");
+            $table->string("alpha_2_code");
+            $table->string("alpha_3_code");
+            $table->string("en_short_name");
+            $table->string("nationality");
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('countries');
     }
 };

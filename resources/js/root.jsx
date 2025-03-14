@@ -5,8 +5,11 @@ import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./routes/PrivateRoute";
 import PublicRoute from "./routes/PublicRoute";
 
-// //public
+//public
 const Login = lazy(() => import("./pages/Login"));
+
+//private
+const DesktopUI = lazy(() => import("./pages/DesktopUI"));
 
 //everyone
 const Unauthorized = lazy(() => import("./pages/Unauthorized"));
@@ -22,6 +25,7 @@ export default function Root() {
     const [userType, setUserType] = useState("");
     const [currId, setCurrId] = useState(0);
     const [branchDetails, setBranchDetails] = useState({});
+
     useEffect(() => {
         const handleContextmenu = (e) => {
             e.preventDefault();
@@ -31,6 +35,7 @@ export default function Root() {
             document.removeEventListener("contextmenu", handleContextmenu);
         };
     }, []);
+
     function changeAuth(value, id, userType, profile, branchDets) {
         if (value === false) {
             localStorage.removeItem("token");
@@ -45,46 +50,46 @@ export default function Root() {
         setBranchDetails(branchDets);
     }
 
-    // useEffect(() => {
-    //     let abortController;
+    useEffect(() => {
+        let abortController;
 
-    //     async function checkToken() {
-    //         setIsLoading(true);
-    //         abortController = new AbortController();
-    //         let signal = abortController.signal;
+        async function checkToken() {
+            setIsLoading(true);
+            abortController = new AbortController();
+            let signal = abortController.signal;
 
-    //         await axios
-    //             .post(
-    //                 `${API_URL}check_token`,
-    //                 { signal },
-    //                 {
-    //                     headers: {
-    //                         Authorization: localStorage.getItem("token") || "",
-    //                     },
-    //                 }
-    //             )
-    //             .then((res) => {
-    //                 setUserType(res.data.data.type);
-    //                 setCurrId(res.data.data.id);
-    //                 setIsAuth(true);
-    //                 setCurrProfile(res.data.data.profile);
-    //                 setBranchDetails(res.data.data.branch);
-    //             })
-    //             .catch(() => {
-    //                 setUserType("");
-    //                 setIsAuth(false);
-    //                 setCurrId(0);
-    //                 setCurrProfile({});
-    //                 localStorage.removeItem("token");
-    //             });
+            await axios
+                .post(
+                    `${API_URL}check_token`,
+                    { signal },
+                    {
+                        headers: {
+                            Authorization: localStorage.getItem("token") || "",
+                        },
+                    }
+                )
+                .then((res) => {
+                    setUserType(res.data.data.type);
+                    setCurrId(res.data.data.id);
+                    setIsAuth(true);
+                    setCurrProfile(res.data.data.profile);
+                    setBranchDetails(res.data.data.branch);
+                })
+                .catch(() => {
+                    setUserType("");
+                    setIsAuth(false);
+                    setCurrId(0);
+                    setCurrProfile({});
+                    localStorage.removeItem("token");
+                });
 
-    //         setIsLoading(false);
-    //     }
+            setIsLoading(false);
+        }
 
-    //     checkToken();
+        checkToken();
 
-    //     return () => abortController.abort();
-    // }, []);
+        return () => abortController.abort();
+    }, []);
 
     const contextValue = useMemo(
         () => ({
@@ -103,10 +108,21 @@ export default function Root() {
         <AuthContext.Provider value={contextValue}>
             <Suspense fallback={<PreLoader />}>
                 <Routes>
-                    {/* <Route exact path="/" element={<PublicRoute />}>
+                    <Route exact path="/" element={<PublicRoute />}>
                         <Route path="/" element={<Login />} />
-                    </Route> */}
-                    <Route path="/" element={<Login />} />
+                    </Route>
+                    <Route
+                        exact
+                        path="/unauthorized"
+                        element={<Unauthorized />}
+                    />
+                    <Route
+                        element={
+                            <PrivateRoute allowedRoles={["DEV", "ADMIN"]} />
+                        }
+                    >
+                        <Route path="/dashboard" element={<DesktopUI />} />
+                    </Route>
                 </Routes>
             </Suspense>
         </AuthContext.Provider>

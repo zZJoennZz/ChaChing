@@ -11,13 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('provinces', function (Blueprint $table) {
             $table->id();
-            $table->string("member_id")->unique(); //FORMAT: MYYYYMMDDCTR SAMPLE: M202410030001
-            $table->string("status");
-            $table->string("email_address");
-            $table->date("member_since_date");
-            $table->string("online_ref_id");
+            $table->string("psgc_code");
+            $table->string("prov_desc");
+            $table->string("reg_code");
+            $table->string("prov_code");
             $table->timestamps();
         });
     }
@@ -27,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('provinces');
     }
 };

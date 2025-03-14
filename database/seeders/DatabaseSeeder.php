@@ -25,10 +25,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             PositionSeeder::class,
             UserProfileSeeder::class,
-            // RDSSeeder::class,
         ]);
 
-        $path = base_path() . '/database/seeders/records_disposition_schedules.sql';
+        $path = base_path() . '/database/seeders/EXTRA.sql';
         $sql = file_get_contents($path);
         DB::unprepared($sql);
     }
